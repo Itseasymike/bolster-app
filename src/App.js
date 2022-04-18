@@ -20,8 +20,8 @@ import wellsfargoClean from './assets/wellsfargo/wellsfargo-clean.png';
 import wellsfargoPhish from './assets/wellsfargo/wellsfargo-phish.png';
 import './App.css';
 
-const images = [
-  { clean : dhlClean, phish : dhlPhish, sort: 1 },
+let images = [
+  { clean : dhlClean, phish : dhlPhish },
   { clean : dropboxClean, phish : dropboxPhish },
   { clean : instagramClean, phish : instagramPhish },
   { clean : linkedinClean, phish : linkedinPhish },
@@ -43,8 +43,9 @@ const App = () => {
   const [clicked, setClicked] = useState(undefined);
 
   useEffect(() => {
-    setImageArray(images);
-    setNextImageGroup(images[0]);
+    const sorted = images.sort(() => 0.5 - Math.random());
+    setImageArray(sorted);
+    setNextImageGroup(sorted[0]);
   }, []); 
 
   useEffect(() => {
@@ -60,7 +61,6 @@ const App = () => {
 
   const onImageClick = (e) => {
     const { target : { src } } = e;
-    console.log('e.target', e.target);
     if (src.includes('phish')) setClicked('phish');
     if (src.includes('clean')) setClicked('clean');
     setSelectedImage(src);
@@ -92,15 +92,15 @@ const App = () => {
   }
 
   const reset = () => {
+    const sorted = images.sort(() => 0.5 - Math.random());
     setCounter(15);
-    setNextImageGroup(images[0]);
     setSelectedImage('');
     setCurrentIndex(0);
     setScore(1);
     setValid('');
     setClicked(undefined);
-    setImageArray(images.sort(() => (Math.random() - 0.5)))
-    
+    setNextImageGroup(sorted[0]);
+    setImageArray(sorted);
   }
 
   return (
@@ -114,7 +114,7 @@ const App = () => {
             <button
               type='button'
               className='btn btn-link text-right'
-              onClick={reset}
+              onClick={() => reset()}
             >
               Click here to retry!
             </button>
